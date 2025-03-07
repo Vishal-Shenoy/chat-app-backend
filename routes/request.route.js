@@ -1,0 +1,10 @@
+const express = require("express");
+const router = express.Router();
+const controller = require("../controllers/request.controller");
+const { verifyToken } = require("../utils/verifyToken");
+router.post("/createRequest", verifyToken, controller.createRequest);
+router.put("/acceptRequest/:requestId", verifyToken, controller.acceptFriendRequest);
+router.put("/deleteRequest", controller.deleteRequest);
+router.delete("/deleteRequest/:id", verifyToken, controller.deleteRequestById);
+router.get("/getMyRequests/:id", verifyToken, controller.getMyRequests);
+module.exports = router;

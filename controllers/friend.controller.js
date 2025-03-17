@@ -23,12 +23,10 @@ const getFriends = async (req, res) => {
             };
         });
 
-        return res
-            .status(200)
-            .json({
-                friends: formattedFriends,
-                message: "Friends sent successfully",
-            });
+        return res.status(200).json({
+            friends: formattedFriends,
+            message: "Friends sent successfully",
+        });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Internal server error" });
@@ -60,4 +58,23 @@ const deleteFriend = async (req, res) => {
     }
 };
 
-module.exports = { getFriends, deleteFriend };
+const updateMessage = async (senderId, receiverId, message) => {
+    try {
+        if (!senderId || !receiverId || !message) {
+            return res.status(400).json({ error: "userId and message are required" });
+        }
+        const friendship = await FriendModel.findOne({
+            $or: [
+                { user1: senderId, user2: receiverId },
+                { user1: receiverId, user2: senderId },
+            ],
+        });
+        friendship.message = message;
+        await friendship.save();
+        return;
+    } catch (error) {
+        return;
+    }
+};
+
+module.exports = { getFriends, deleteFriend, updateMessage };

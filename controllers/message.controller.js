@@ -27,8 +27,8 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
     try {
-        const { senderId, receiverId } = req.params;
-
+        const senderId = req.params.senderId;
+        const receiverId = req.params.receiverId;
         if (!senderId || !receiverId) {
             return res.status(400).json({ message: "Both user IDs are required" });
         }
@@ -38,9 +38,9 @@ const getMessages = async (req, res) => {
                 { senderId: senderId, receiverId: receiverId },
                 { senderId: receiverId, receiverId: senderId },
             ],
-        }).sort({ createdAt: 1 }); 
+        }).sort({ createdAt: 1 });
 
-        return res.status(200).json(messages);
+        return res.status(200).json({ messages: messages, message: "Messages Sent Successfull" });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Internal server error" });
@@ -50,7 +50,7 @@ const getMessages = async (req, res) => {
 
 const markAsRead = async (req, res) => {
     try {
-        const  messageId  = req.params.messageId;
+        const messageId = req.params.messageId;
 
         if (!messageId) {
             return res.status(400).json({ message: "Message ID is required" });
@@ -136,4 +136,4 @@ const editMessage = async (req, res) => {
 
 
 
-module.exports = {sendMessage,getMessages,markAsRead,deleteMessage,editMessage}
+module.exports = { sendMessage, getMessages, markAsRead, deleteMessage, editMessage }
